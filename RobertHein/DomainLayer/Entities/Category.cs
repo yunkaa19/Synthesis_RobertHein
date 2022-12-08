@@ -1,6 +1,6 @@
 ﻿namespace Models.Entities;
 
-public record Category
+public class Category
 {
     private int _id;
     private string _name;

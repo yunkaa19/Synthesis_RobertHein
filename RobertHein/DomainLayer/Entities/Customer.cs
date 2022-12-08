@@ -10,9 +10,9 @@ public class Customer
     private string _phone;
     private string _email;
     private string _password;
+    private DateOnly _dateOfBirth;
 
-    private List<Product> _cart = new List<Product>();
-
+    private List<Product> _favorites = new List<Product>(); //
 
 
     public int Id
@@ -62,15 +62,20 @@ public class Customer
         get => _password;
         set => _password = value ?? throw new ArgumentNullException(nameof(value));
     }
-
-    public List<Product> Cart
+    public DateOnly DateOfBirth
     {
-        get => _cart;
-        set => _cart = value ?? throw new ArgumentNullException(nameof(value));
+        get => _dateOfBirth;
+        set => _dateOfBirth = value;
     }
 
+    
+    public List<Product> Favorites
+    {
+        get => _favorites;
+        set => _favorites = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
-    public Customer(int id, string name, string address, string city, string zipCode, string phone, string email, string password)
+    public Customer(int id, string name, string address, string city, string zipCode, string phone, DateOnly dateOfBirth, string email, string password)
     {
         _id = id;
         _name = name;
@@ -80,5 +85,37 @@ public class Customer
         _phone = phone;
         _email = email;
         _password = password;
+        _dateOfBirth = dateOfBirth;
     }
+    
+    
+    bool AddToFavorites(Product product)
+    {
+        if (product == null)
+        {
+            throw new ArgumentNullException(nameof(product));
+        }
+
+        if (_favorites.Contains(product))
+        {
+            return false;
+        }
+        _favorites.Add(product);
+        return true;
+    }
+    bool RemoveFromFavorites(Product product)
+    {
+        if (product == null)
+        {
+            throw new ArgumentNullException(nameof(product));
+        }
+
+        if (_favorites.Contains(product))
+        {
+            _favorites.Remove(product);
+            return true;
+        }
+        return false;
+    }
+    
 }
