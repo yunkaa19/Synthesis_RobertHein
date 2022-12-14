@@ -80,6 +80,38 @@ public class CustomerRepository : Repository, ICustomerRepository
         
     }
 
+    public Customer GetCustomerByEmail(string email)
+    {
+        Customer? customer = null;
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("SELECT * FROM Customer WHERE Email = @email", connection);
+                command.Parameters.AddWithValue("@email",email);
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    int id = Convert.ToInt32(reader["Id"].ToString().Trim());
+                    string name = reader["FirstName"].ToString().Trim() + " " + reader["LastName"].ToString().Trim();
+                    string phone = reader["Phone"].ToString().Trim();
+                    string address = reader["Address"].ToString().Trim();
+                    string city = reader["City"].ToString().Trim();
+                    string zipCode = reader["ZipCode"].ToString().Trim();
+                    DateOnly birthday = DateOnly.FromDateTime(Convert.ToDateTime(reader["Birthday"].ToString().Trim()));
+                    string password = reader["Password"].ToString().Trim();
+                    customer = new Customer(id, name, address, city, zipCode, phone, birthday, email, password);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            
+        }
+        return customer;
+    }
+
     public void AddCustomer(Customer customer)
     {
         try

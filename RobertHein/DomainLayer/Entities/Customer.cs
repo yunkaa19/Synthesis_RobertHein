@@ -1,4 +1,7 @@
-﻿namespace Models.Entities;
+﻿using Models.DTO;
+using Models.Managers;
+
+namespace Models.Entities;
 
 public class Customer
 {
@@ -12,6 +15,7 @@ public class Customer
     private string _password;
     private DateOnly _dateOfBirth;
 
+    //private BonusCard? _card; //Maybe
     private List<Product> _favorites = new List<Product>(); //
 
 
@@ -62,19 +66,32 @@ public class Customer
         get => _password;
         set => _password = value ?? throw new ArgumentNullException(nameof(value));
     }
+
     public DateOnly DateOfBirth
     {
         get => _dateOfBirth;
         set => _dateOfBirth = value;
     }
 
-    
+
     public List<Product> Favorites
     {
         get => _favorites;
         set => _favorites = value ?? throw new ArgumentNullException(nameof(value));
     }
 
+    //validation inside Register
+    public Customer(Register r)
+    {
+        Name = r.firstName + " " + r.lastName;
+        Email = r.email;
+        Password = PasswordHasher.HashPassword(r.password);
+        DateOfBirth = DateOnly.Parse(Convert.ToDateTime(r.birthdayDate).ToShortDateString());
+        Address = r.address;
+        City = r.city;
+        ZipCode = r.postalCode;
+        Phone = r.phoneNumber;
+    }
     public Customer(int id, string name, string address, string city, string zipCode, string phone, DateOnly dateOfBirth, string email, string password)
     {
         _id = id;

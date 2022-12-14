@@ -11,6 +11,7 @@ public class Order
     private Customer _Customer;
     private BonusCard? _BonusCard;
     private ShoppingCart _ShoppingCart;
+    private bool _OrderStatus;
 
     public int Id
     {
@@ -53,14 +54,32 @@ public class Order
         get => _ShoppingCart;
         set => _ShoppingCart = value;
     }
-    
-    public Order(int id, DateOnly orderDate, DateTime deliveryDate, DeliveryOptions deliveryOption, BonusCard bonusCard, ShoppingCart shoppingCart)
+    public bool OrderStatus
+    {
+        get => _OrderStatus;
+        set => _OrderStatus = value;
+    }
+    public Order(int id, DateOnly orderDate, DateTime deliveryDate, DeliveryOptions deliveryOption, Customer customer, BonusCard? bonusCard, ShoppingCart shoppingCart, bool orderStatus)
     {
         Id = id;
         OrderDate = orderDate;
         DeliveryDate = deliveryDate;
         DeliveryOption = deliveryOption;
+        Customer = customer;
         BonusCard = bonusCard;
         ShoppingCart = shoppingCart;
+        OrderStatus = orderStatus;
+    }
+    
+
+    public Order(DateOnly orderDate, DateTime deliveryDate, DeliveryOptions deliveryOption, Customer customer, BonusCard? bonusCard, ShoppingCart shoppingCart, bool orderStatus)
+    {
+        OrderDate = orderDate;
+        DeliveryDate = deliveryDate;
+        DeliveryOption = deliveryOption;
+        Customer = customer;
+        BonusCard = bonusCard;
+        ShoppingCart = shoppingCart;
+        OrderStatus = orderStatus;
     }
 }

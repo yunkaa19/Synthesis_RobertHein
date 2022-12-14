@@ -2,9 +2,8 @@
 
 public enum BonusType
 {
-    TwoForOne,
-    Percentage,
-    TwoForSetPrice,
-    Quantity,
-    SecondHalfPrice,
+    Percentage = 1,
+    Quantity = 2,
+    SecondHalfPrice = 3,
+    XForY = 4,
 }

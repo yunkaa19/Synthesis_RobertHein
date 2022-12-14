@@ -19,9 +19,13 @@ public class Register
     [Required]
     [DataType(DataType.PostalCode)]
     public string postalCode { get; set; }
-
     
-
+    [Required]
+    public string address { get; set; }
+    
+    [Required]
+    public string city { get; set; }
+    
     [Required]
     [DataType(DataType.PhoneNumber)]
     public string phoneNumber { get; set; }

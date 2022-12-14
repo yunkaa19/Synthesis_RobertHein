@@ -26,7 +26,7 @@ public class ShoppingCart
     public float GetTotal()
     {
         float total = 0;
-        List<Bonus> bonuses = new List<Bonus>();
+        List<Bonuses> bonuses = new List<Bonuses>();
         foreach (Product product in _CartItems)
         {
             

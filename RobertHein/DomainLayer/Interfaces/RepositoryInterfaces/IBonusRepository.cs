@@ -4,12 +4,12 @@ namespace Models.Interfaces.RepositoryInterfaces;
 
 public interface IBonusRepository
 {
-    List<Bonus> GetAllBonuses();
-    Bonus GetBonusById(int id);
-    Bonus GetBonusByProduct(Product product);
-    List<Bonus> GetBonusesByDate(DateOnly date);
-    void AddBonus(Bonus bonus);
-    void UpdateBonus(Bonus bonus);
-    void DeleteBonus(Bonus bonus);
+    List<Bonuses> GetAllBonuses();
+    Bonuses GetBonusById(int id);
+    List<Bonuses> GetBonusesByProduct(Product product);
+    List<Bonuses> GetBonusesByDate(DateOnly date);
+    void AddBonus(Bonuses bonus);
+    void UpdateBonus(Bonuses bonus);
+    void DeleteBonus(Bonuses bonus);
     
 }
