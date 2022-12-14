@@ -13,7 +13,11 @@ public class BonusCardManager
         _bonusCardRepository = bonusCardRepository;
         _bonusCards = _bonusCardRepository.GetAllBonusCards();
     }
-    
+
+    public void Refresh()
+    {
+        _bonusCards = _bonusCardRepository.GetAllBonusCards();
+    }
     public void AddBonusCard(BonusCard bonusCard)
     {
         _bonusCards.Add(bonusCard);
