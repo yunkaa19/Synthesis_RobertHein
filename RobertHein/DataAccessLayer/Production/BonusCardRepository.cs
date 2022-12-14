@@ -51,6 +51,38 @@ public class BonusCardRepository: Repository, IBonusCardRepository
         }
     }
 
+    public List<BonusCard> GenerateBonusCards(int amount)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("INSERT INTO BonusCards (Points) VALUES (0)", connection);
+                for (int i = 0; i < amount; i++)
+                {
+                    command.ExecuteNonQuery();
+                }
+                SqlCommand command2 = new SqlCommand("SELECT TOP " + amount + " * FROM BonusCards ORDER BY CardNumber DESC", connection);
+                SqlDataReader reader = command2.ExecuteReader();
+                List<BonusCard> bonusCards = new List<BonusCard>();
+                while (reader.Read())
+                {
+                    string CardNumber = reader["CardNumber"].ToString();
+                    int Points = Convert.ToInt32(reader["Points"]);
+                    bonusCards.Add(new BonusCard(CardNumber, Points));
+                }
+                return bonusCards;
+            }   
+        }
+        catch (Exception e)
+        {
+            
+        }
+
+        return null!;
+    }
+
     public void UpdateBonusCard(BonusCard bonusCard)
     {
         try
@@ -86,5 +118,58 @@ public class BonusCardRepository: Repository, IBonusCardRepository
         {
             
         }
+    }
+
+    public BonusCard GetBonusCard(string cardNumber)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("SELECT * FROM BonusCards WHERE CardNumber = @cardNumber", connection);
+                command.Parameters.AddWithValue("@cardNumber", cardNumber);
+                SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    string CardNumber = reader["CardNumber"].ToString();
+                    int Points = Convert.ToInt32(reader["Points"]);
+                    return new BonusCard(CardNumber, Points);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            
+        }
+
+        return null!;
+    }
+
+    public List<BonusCard> GetAllBonusCards()
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = new SqlCommand("SELECT * FROM BonusCards", connection);
+                SqlDataReader reader = command.ExecuteReader();
+                List<BonusCard> bonusCards = new List<BonusCard>();
+                while (reader.Read())
+                {
+                    string CardNumber = reader["CardNumber"].ToString();
+                    int Points = Convert.ToInt32(reader["Points"]);
+                    bonusCards.Add(new BonusCard(CardNumber, Points));
+                }
+                return bonusCards;
+            }
+        }
+        catch (Exception e)
+        {
+            
+        }
+
+        return null!;
     }
 }
