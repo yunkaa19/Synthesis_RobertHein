@@ -82,4 +82,10 @@ public class Order
         ShoppingCart = shoppingCart;
         OrderStatus = orderStatus;
     }
+    
+    
+    public void OrderComplete()
+    {
+        OrderStatus = true;
+    }
 }
