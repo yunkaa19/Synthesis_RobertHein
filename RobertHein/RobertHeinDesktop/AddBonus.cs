@@ -1,6 +1,6 @@
 ﻿using Models.Entities;
 using Models.Enums;
-using Models.Managers;
+using BusinessLogicLayer.Managers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

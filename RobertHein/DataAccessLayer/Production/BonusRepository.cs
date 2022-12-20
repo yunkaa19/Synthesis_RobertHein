@@ -1,8 +1,8 @@
 ﻿using System.Data.SqlClient;
+using DataAccessLayer.Interfaces;
 using Models.Entities;
 using Models.Entities.Bonus;
 using Models.Enums;
-using Models.Interfaces.RepositoryInterfaces;
 
 namespace DataAccessLayer.Production;
 

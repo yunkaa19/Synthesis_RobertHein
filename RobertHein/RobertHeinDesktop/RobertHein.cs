@@ -1,5 +1,5 @@
 ﻿using DataAccessLayer.Production;
-using Models.Managers;
+using BusinessLogicLayer.Managers;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DataAccessLayer.Interfaces;
 using Models.Entities;
 using Models.Entities.Bonus;
 using Models.Enums;
@@ -19,21 +20,25 @@ namespace RobertHeinDesktop
 {
     public partial class RobertHein : Form
     {
-        private ProductManager _productManager = new ProductManager(new ProductRepository());
-        private CategoryManager _categoryManager = new CategoryManager(new CategoryRepository());
-        private BonusManager _bonusManager = new BonusManager(new BonusRepository());
-        private BonusCardManager _bonusCardManager = new BonusCardManager(new BonusCardRepository());
-        private CustomerManager _customerManager = new CustomerManager(new CustomerRepository());
+        private ProductManager _productManager;
+        private CategoryManager _categoryManager;
+        private BonusManager _bonusManager;
+        private BonusCardManager _bonusCardManager;
+        private CustomerManager _customerManager;
         private OrderManager _orderManager;
 
         private DataTable _productTable = new DataTable();
         private DataTable _bonusTable = new DataTable();
-        public RobertHein()
+        public RobertHein(IProductRepository productRepository, ICategoryRepository categoryRepository, IBonusRepository bonusRepository, IBonusCardRepository bonusCardRepository, ICustomerRepository customerRepository, IOrderRepository orderRepository)
         {
-            InitializeComponent();
+            _productManager = new ProductManager(productRepository);
+            _categoryManager = new CategoryManager(categoryRepository);
+            _bonusManager = new BonusManager(bonusRepository);
+            _bonusCardManager = new BonusCardManager(bonusCardRepository);
+            _customerManager = new CustomerManager(customerRepository);
             _orderManager = new OrderManager(new OrderRepository(), _productManager.GetAll(), _customerManager.GetCustomers(), _bonusCardManager.GetAllBonusCards());
 
-
+            InitializeComponent();
         }
         
         public void ProductDataTableMaker(string category = "All")

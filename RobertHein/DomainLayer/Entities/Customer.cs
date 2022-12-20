@@ -1,5 +1,4 @@
 ﻿using Models.DTO;
-using Models.Managers;
 
 namespace Models.Entities;
 
@@ -85,7 +84,7 @@ public class Customer
     {
         Name = r.firstName + " " + r.lastName;
         Email = r.email;
-        Password = PasswordHasher.HashPassword(r.password);
+        Password = r.password;
         DateOfBirth = DateOnly.Parse(Convert.ToDateTime(r.birthdayDate).ToShortDateString());
         Address = r.address;
         City = r.city;

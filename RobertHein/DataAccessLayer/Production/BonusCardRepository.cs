@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
+using DataAccessLayer.Interfaces;
 using Models.Entities;
-using Models.Interfaces.RepositoryInterfaces;
+ 
 
 namespace DataAccessLayer.Production;
 

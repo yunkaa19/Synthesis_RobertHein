@@ -1,5 +1,5 @@
 ﻿using Models.Entities;
-using Models.Interfaces.RepositoryInterfaces;
+using DataAccessLayer.Interfaces;
 using System.Data.SqlClient;
 using Models.Enums;
 
