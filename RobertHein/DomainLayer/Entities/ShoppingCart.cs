@@ -1,4 +1,6 @@
-﻿namespace Models.Entities;
+﻿using Models.Entities.Bonus;
+
+namespace Models.Entities;
 
 public class ShoppingCart
 {

@@ -17,27 +17,27 @@ public class ProductRepository : Repository, IProductRepository
                 connection.Open();
                 SqlCommand command =
                     new SqlCommand(
-                        "select ProductID, Name, Price, unit, UnitExtension, Discontinued, InStock , C.CategoryID, CategoryName, ParentID from Products as p join Categories C on p.CategoryID = C.CategoryID;",
+                        "select ProductID, Name, Price, unit, UnitExtension, Discontinued, InStock ,Image, C.CategoryID, CategoryName, ParentID from Products as p  join Categories C on p.CategoryID = C.CategoryID;",
                         connection);
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     int productID = Convert.ToInt32(reader["ProductID"].ToString());
-                    string name = reader["Name"].ToString();
+                    string name = reader["Name"].ToString().Trim();
                     double price = Convert.ToDouble(reader["Price"].ToString());
                     Units unit = (Units)Convert.ToInt32(reader["Unit"].ToString());
                     byte[] image = (byte[])reader["Image"];
                     bool Discontinued = Convert.ToBoolean(reader["Discontinued"].ToString());
                     int inStock = Convert.ToInt32(reader["InStock"].ToString());
                     int categoryID = Convert.ToInt32(reader["CategoryID"].ToString());
-                    string categoryName = reader["CategoryName"].ToString();
+                    string categoryName = reader["CategoryName"].ToString().Trim();
                     if (reader["ParentID"] != DBNull.Value)
                     {
                         int parentID = Convert.ToInt32(reader["ParentID"].ToString());
                         Category category = new Category(categoryID, categoryName, parentID);
                         if (reader["UnitExtension"] != DBNull.Value)
                         {
-                            string unitExtension = reader["UnitExtension"].ToString();
+                            string unitExtension = reader["UnitExtension"].ToString().Trim();
                             Product product = new Product(productID, category, name, (float)price, inStock, unit,
                                 unitExtension, image, Discontinued);
                             products.Add(product);
@@ -151,22 +151,35 @@ public class ProductRepository : Repository, IProductRepository
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand(
-                    "insert into Products (Name, Price, Unit, UnitExtension, Discontinued, InStock, CategoryID, Image) values (@name, @price, @unit, @unitExtension, @discontinued, @inStock, @categoryID, @image);",
-                    connection);
-                command.Parameters.AddWithValue("@name", product.Name);
-                command.Parameters.AddWithValue("@price", product.Price);
-                command.Parameters.AddWithValue("@unit", product.Unit);
-                if (product.UnitExtension != "")
-                    command.Parameters.AddWithValue("@unitExtension", product.UnitExtension);
+                if (String.IsNullOrEmpty(product.UnitExtension))
+                {
+                    SqlCommand command = new SqlCommand(
+                        "insert into Products (Name, Price, Unit, Discontinued, InStock, CategoryID, Image) values (@name, @price, @unit, @discontinued, @inStock, @categoryID, @image);", connection);
+                    command.Parameters.AddWithValue("@name", product.Name);
+                    command.Parameters.AddWithValue("@price", product.Price);
+                    command.Parameters.AddWithValue("@unit", product.Unit);
+                    command.Parameters.AddWithValue("@discontinued", product.IsDiscontinued);
+                    command.Parameters.AddWithValue("@inStock", product.Stock);
+                    command.Parameters.AddWithValue("@categoryID", product.Category.Id);
+                    command.Parameters.AddWithValue("@image", product.Image);
+                    command.ExecuteNonQuery();
+                }
                 else
-                    command.Parameters.AddWithValue("@unitExtension", DBNull.Value);
-                command.Parameters.AddWithValue("@discontinued", product.IsDiscontinued);
-                command.Parameters.AddWithValue("@inStock", product.Stock);
-                command.Parameters.AddWithValue("@categoryID", product.Category.Id);
-                command.Parameters.AddWithValue("@image", product.Image);
-                command.ExecuteNonQuery();
+                {
+                    SqlCommand command = new SqlCommand(
+                        "insert into Products (Name, Price, Unit, UnitExtension, Discontinued, InStock, CategoryID, Image) values (@name, @price, @unit, @unitExtension, @discontinued, @inStock, @categoryID, @image);", connection);
+                    command.Parameters.AddWithValue("@name", product.Name);
+                    command.Parameters.AddWithValue("@price", product.Price);
+                    command.Parameters.AddWithValue("@unit", product.Unit);
+                    command.Parameters.AddWithValue("@unitExtension", product.UnitExtension);
+                    command.Parameters.AddWithValue("@discontinued", product.IsDiscontinued);
+                    command.Parameters.AddWithValue("@inStock", product.Stock);
+                    command.Parameters.AddWithValue("@categoryID", product.Category.Id);
+                    command.Parameters.AddWithValue("@image", product.Image);
+                    command.ExecuteNonQuery();
+                }
             }
+                
         }
         catch (Exception ex)
         {
@@ -181,22 +194,39 @@ public class ProductRepository : Repository, IProductRepository
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand(
-                    "update Products set Name = @name, Price = @price, Unit = @unit, UnitExtension = @unitExtension, Discontinued = @discontinued, InStock = @inStock, CategoryID = @categoryID, Image = @image where ProductID = @id;",
-                    connection);
-                command.Parameters.AddWithValue("@name", product.Name);
-                command.Parameters.AddWithValue("@price", product.Price);
-                command.Parameters.AddWithValue("@unit", product.Unit);
-                if (product.UnitExtension != "")
-                    command.Parameters.AddWithValue("@unitExtension", product.UnitExtension);
-                else
+
+                if (String.IsNullOrEmpty(product.UnitExtension))
+                {
+                    SqlCommand command = new SqlCommand(
+                        "update Products set Name = @name, Price = @price, Unit = @unit, Discontinued = @discontinued, InStock = @inStock, CategoryID = @categoryID, Image = @image where ProductID = @id;",
+                        connection);
+                    command.Parameters.AddWithValue("@name", product.Name);
+                    command.Parameters.AddWithValue("@price", product.Price);
+                    command.Parameters.AddWithValue("@unit", product.Unit);
                     command.Parameters.AddWithValue("@unitExtension", DBNull.Value);
-                command.Parameters.AddWithValue("@discontinued", product.IsDiscontinued);
-                command.Parameters.AddWithValue("@inStock", product.Stock);
-                command.Parameters.AddWithValue("@categoryID", product.Category.Id);
-                command.Parameters.AddWithValue("@image", product.Image);
-                command.Parameters.AddWithValue("@id", product.Id);
-                command.ExecuteNonQuery();
+                    command.Parameters.AddWithValue("@discontinued", product.IsDiscontinued);
+                    command.Parameters.AddWithValue("@inStock", product.Stock);
+                    command.Parameters.AddWithValue("@categoryID", product.Category.Id);
+                    command.Parameters.AddWithValue("@image", product.Image);
+                    command.Parameters.AddWithValue("@id", product.Id);
+                    command.ExecuteNonQuery();
+                }
+                else
+                {
+                    SqlCommand command = new SqlCommand(
+                        "update Products set Name = @name, Price = @price, Unit = @unit, UnitExtension = @unitExtension, Discontinued = @discontinued, InStock = @inStock, CategoryID = @categoryID, Image = @image where ProductID = @id;",
+                        connection);
+                    command.Parameters.AddWithValue("@name", product.Name);
+                    command.Parameters.AddWithValue("@price", product.Price);
+                    command.Parameters.AddWithValue("@unit", product.Unit);
+                    command.Parameters.AddWithValue("@unitExtension", product.UnitExtension);
+                    command.Parameters.AddWithValue("@discontinued", product.IsDiscontinued);
+                    command.Parameters.AddWithValue("@inStock", product.Stock);
+                    command.Parameters.AddWithValue("@categoryID", product.Category.Id);
+                    command.Parameters.AddWithValue("@image", product.Image);
+                    command.Parameters.AddWithValue("@id", product.Id);
+                    command.ExecuteNonQuery();
+                }
             }
         }
         catch (Exception ex)

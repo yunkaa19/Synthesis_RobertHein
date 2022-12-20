@@ -14,9 +14,18 @@ public class CategoryManager
         _categories = _categoryRepository.GetAllCategories();
     }
     
+    public void Refresh()
+    {
+        _categories = _categoryRepository.GetAllCategories();
+    }
     public List<Category> GetAllCategories()
     {
         return _categories;
+    }
+    
+    public Category GetCategoryByName(string name)
+    {
+        return _categories.FirstOrDefault(c => c.Name == name);
     }
     
     public void RefreshCategories()

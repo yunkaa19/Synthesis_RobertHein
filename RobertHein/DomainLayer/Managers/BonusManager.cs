@@ -1,4 +1,5 @@
 ﻿using Models.Entities;
+using Models.Entities.Bonus;
 using Models.Interfaces.RepositoryInterfaces;
 
 namespace Models.Managers;
@@ -19,6 +20,11 @@ public class BonusManager
         _bonuses = _bonusRepository.GetAllBonuses();
     }
     
+    public List<Bonuses> GetBonuses()
+    {
+        return _bonuses;
+    }
+    
     public Bonuses GetBonusById(int id)
     {
         if(_bonuses.Any(b => b.Id == id))
@@ -33,8 +39,7 @@ public class BonusManager
 
     public List<Bonuses> GetBonusesByProduct(Product product)
     {
-        List<Bonuses> bonuses;
-        bonuses = _bonuses.Where(b => b.Product.Id == product.Id).ToList();
+        var bonuses = _bonuses.Where(b => b.Product.Id == product.Id).ToList();
         if(bonuses.Count == 0)
         {
             bonuses = _bonusRepository.GetBonusesByProduct(product);

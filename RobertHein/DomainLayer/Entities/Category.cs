@@ -36,6 +36,13 @@ public class Category
         _id = id;
         _name = name;
     }
-    
-    
+
+    public Category(string name, int? parentId)
+    {
+        _name = name;
+    }
+    public Category(string name)
+    {
+        _name = name;
+    }
 }

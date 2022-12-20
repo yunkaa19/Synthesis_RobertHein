@@ -1,4 +1,6 @@
-﻿namespace Models.Entities;
+﻿using Models.Entities.Bonus;
+
+namespace Models.Entities;
 
 public class XForThePriceOfY : Bonuses
 {
@@ -13,6 +15,11 @@ public class XForThePriceOfY : Bonuses
     
 
     public XForThePriceOfY(int id, Product product, DateOnly startDate, DateOnly endDate, float price, int numberOfItems) : base(id, product, startDate, endDate, price)
+    {
+        NumberOfItems = numberOfItems;
+        Price = price;
+    }
+    public XForThePriceOfY(Product product, DateOnly startDate, DateOnly endDate, float price, int numberOfItems) : base(product, startDate, endDate, price)
     {
         NumberOfItems = numberOfItems;
         Price = price;

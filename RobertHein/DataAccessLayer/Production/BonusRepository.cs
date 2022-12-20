@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlClient;
 using Models.Entities;
+using Models.Entities.Bonus;
 using Models.Enums;
 using Models.Interfaces.RepositoryInterfaces;
 
@@ -14,7 +15,7 @@ public class BonusRepository :Repository, IBonusRepository
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand("select p.ProductID, Name, p.Price, U.Unit, UnitExtension, InStock, Discontinued, image, C.CategoryID, CategoryName,ParentID, BonusID, StartDate, EndDate, B.Price, TypeOfBonus, percentage, quantity, xAmount from Products as p join Categories as C on p.CategoryID = C.CategoryID join Units as U on p.Unit = U.ID join Bonuses B on p.ProductID = B.ProductID join TypesOfBonuses TOB on B.BonusID = TOB.Id ", connection);
+                SqlCommand command = new SqlCommand("select p.ProductID, Name, p.Price, U.ID as 'Unit', UnitExtension, InStock, Discontinued, image, C.CategoryID, CategoryName,ParentID, BonusID, StartDate, EndDate, B.Price, B.TypeOfBonus, percentage, quantity, xAmount from Products as p join Categories as C on p.CategoryID = C.CategoryID join Units as U on p.Unit = U.ID join Bonuses B on p.ProductID = B.ProductID join TypesOfBonuses TOB on B.BonusID = TOB.Id ", connection);
                 SqlDataReader reader = command.ExecuteReader();
                 List<Bonuses> bonuses = new List<Bonuses>();
                 while (reader.Read())
@@ -39,8 +40,8 @@ public class BonusRepository :Repository, IBonusRepository
                         categoryParent = Convert.ToInt32(reader["ParentID"]);
                     }
                     int bonusId = Convert.ToInt32(reader["BonusID"]);
-                    DateOnly startDate = (DateOnly)reader["StartDate"];
-                    DateOnly endDate = (DateOnly)reader["EndDate"];
+                    DateOnly startDate = DateOnly.Parse(Convert.ToDateTime(reader["StartDate"]).ToString("yyyy-MM-dd"));
+                    DateOnly endDate = DateOnly.Parse(Convert.ToDateTime(reader["EndDate"]).ToString("yyyy-MM-dd"));
                     float bonusPrice = (float)Convert.ToDouble(reader["Price"]);
                     BonusType typeOfBonus = (BonusType)Convert.ToInt32(reader["TypeOfBonus"]);
                     int percentage = -1;
@@ -81,7 +82,7 @@ public class BonusRepository :Repository, IBonusRepository
                     
                     if (typeOfBonus == BonusType.Percentage)
                     {
-                        PercentageDiscount percentageDiscount = new PercentageDiscount(bonusId, product, startDate, endDate, bonusPrice, percentage);
+                        PercentageDiscount percentageDiscount = new PercentageDiscount(bonusId, product, startDate, endDate, percentage);
                         bonuses.Add(percentageDiscount);
                     }
                     else if (typeOfBonus == BonusType.Quantity)
@@ -187,7 +188,7 @@ public class BonusRepository :Repository, IBonusRepository
                     
                     if (typeOfBonus == BonusType.Percentage)
                     {
-                        PercentageDiscount percentageDiscount = new PercentageDiscount(bonusId, product, startDate, endDate, bonusPrice, percentage);
+                        PercentageDiscount percentageDiscount = new PercentageDiscount(bonusId, product, startDate, endDate, percentage);
                         bonus = percentageDiscount;
                     }
                     else if (typeOfBonus == BonusType.Quantity)
@@ -256,7 +257,7 @@ public class BonusRepository :Repository, IBonusRepository
 
                     if (typeOfBonus == BonusType.Percentage)
                     {
-                        PercentageDiscount percentageDiscount = new PercentageDiscount(bonusId, product, startDate, endDate, bonusPrice, percentage);
+                        PercentageDiscount percentageDiscount = new PercentageDiscount(bonusId, product, startDate, endDate, percentage);
                         bonuses.Add(percentageDiscount);
                     }
                     else if (typeOfBonus == BonusType.Quantity)
@@ -361,7 +362,7 @@ public class BonusRepository :Repository, IBonusRepository
                     
                     if (typeOfBonus == BonusType.Percentage)
                     {
-                        PercentageDiscount percentageDiscount = new PercentageDiscount(bonusId, product, startDate, endDate, bonusPrice, percentage);
+                        PercentageDiscount percentageDiscount = new PercentageDiscount(bonusId, product, startDate, endDate, percentage);
                         bonuses.Add(percentageDiscount);
                     }
                     else if (typeOfBonus == BonusType.Quantity)
@@ -403,8 +404,8 @@ public class BonusRepository :Repository, IBonusRepository
                     PercentageDiscount percentageDiscount = (PercentageDiscount)bonus;
                     SqlCommand command = new SqlCommand("insert into Bonuses (ProductID, StartDate, EndDate, Price, TypeOfBonus, percentage) values (@ProductID, @StartDate, @EndDate, @Price, @TypeOfBonus, @Percentage)", connection);
                     command.Parameters.AddWithValue("@ProductID", percentageDiscount.Product.Id);
-                    command.Parameters.AddWithValue("@StartDate", percentageDiscount.StartDate);
-                    command.Parameters.AddWithValue("@EndDate", percentageDiscount.EndDate);
+                    command.Parameters.AddWithValue("@StartDate", percentageDiscount.StartDate.ToString("yyyy-MM-dd"));
+                    command.Parameters.AddWithValue("@EndDate", percentageDiscount.EndDate.ToString("yyyy-MM-dd"));
                     command.Parameters.AddWithValue("@Price", percentageDiscount.Price);
                     command.Parameters.AddWithValue("@TypeOfBonus", (int)BonusType.Percentage);
                     command.Parameters.AddWithValue("@Percentage", percentageDiscount.Percentage);
@@ -415,8 +416,8 @@ public class BonusRepository :Repository, IBonusRepository
                     QuantityDiscount quantityDiscount = (QuantityDiscount)bonus;
                     SqlCommand command = new SqlCommand("insert into Bonuses (ProductID, StartDate, EndDate, Price, TypeOfBonus, quantity) values (@ProductID, @StartDate, @EndDate, @Price, @TypeOfBonus, @Quantity)", connection);
                     command.Parameters.AddWithValue("@ProductID", quantityDiscount.Product.Id);
-                    command.Parameters.AddWithValue("@StartDate", quantityDiscount.StartDate);
-                    command.Parameters.AddWithValue("@EndDate", quantityDiscount.EndDate);
+                    command.Parameters.AddWithValue("@StartDate", quantityDiscount.StartDate.ToString("yyyy-MM-dd"));
+                    command.Parameters.AddWithValue("@EndDate", quantityDiscount.EndDate.ToString("yyyy-MM-dd"));
                     command.Parameters.AddWithValue("@Price", quantityDiscount.Price);
                     command.Parameters.AddWithValue("@TypeOfBonus", (int)BonusType.Quantity);
                     command.Parameters.AddWithValue("@Quantity", quantityDiscount.Quantity);
@@ -427,8 +428,8 @@ public class BonusRepository :Repository, IBonusRepository
                     SecondHalfPrice secondHalfPrice = (SecondHalfPrice)bonus;
                     SqlCommand command = new SqlCommand("insert into Bonuses (ProductID, StartDate, EndDate, Price, TypeOfBonus) values (@ProductID, @StartDate, @EndDate, @Price, @TypeOfBonus)", connection);
                     command.Parameters.AddWithValue("@ProductID", secondHalfPrice.Product.Id);
-                    command.Parameters.AddWithValue("@StartDate", secondHalfPrice.StartDate);
-                    command.Parameters.AddWithValue("@EndDate", secondHalfPrice.EndDate);
+                    command.Parameters.AddWithValue("@StartDate", secondHalfPrice.StartDate.ToString("yyyy-MM-dd"));
+                    command.Parameters.AddWithValue("@EndDate", secondHalfPrice.EndDate.ToString("yyyy-MM-dd"));
                     command.Parameters.AddWithValue("@Price", secondHalfPrice.Price);
                     command.Parameters.AddWithValue("@TypeOfBonus", (int)BonusType.SecondHalfPrice);
                     command.ExecuteNonQuery();
@@ -438,8 +439,8 @@ public class BonusRepository :Repository, IBonusRepository
                     XForThePriceOfY xForY = (XForThePriceOfY)bonus;
                     SqlCommand command = new SqlCommand("insert into Bonuses (ProductID, StartDate, EndDate, Price, TypeOfBonus, xAmount) values (@ProductID, @StartDate, @EndDate, @Price, @TypeOfBonus, @XAmount)", connection);
                     command.Parameters.AddWithValue("@ProductID", xForY.Product.Id);
-                    command.Parameters.AddWithValue("@StartDate", xForY.StartDate);
-                    command.Parameters.AddWithValue("@EndDate", xForY.EndDate);
+                    command.Parameters.AddWithValue("@StartDate", xForY.StartDate.ToString("yyyy-MM-dd"));
+                    command.Parameters.AddWithValue("@EndDate", xForY.EndDate.ToString("yyyy-MM-dd"));
                     command.Parameters.AddWithValue("@Price", xForY.Price);
                     command.Parameters.AddWithValue("@TypeOfBonus", (int)BonusType.XForY);
                     command.Parameters.AddWithValue("@XAmount", xForY.NumberOfItems);

@@ -1,4 +1,6 @@
-﻿namespace Models.Entities;
+﻿using Models.Entities.Bonus;
+
+namespace Models.Entities;
 
 public class QuantityDiscount : Bonuses
 {
@@ -13,6 +15,11 @@ public class QuantityDiscount : Bonuses
     
 
     public QuantityDiscount(int id, Product product, DateOnly startDate, DateOnly endDate, float price, double quantity) : base(id, product, startDate, endDate, price)
+    {
+        _Quantity = quantity;
+        Price = price;
+    }
+    public QuantityDiscount(Product product, DateOnly startDate, DateOnly endDate, float price, double quantity) : base(product, startDate, endDate, price)
     {
         _Quantity = quantity;
         Price = price;

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAcce
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unit Tests", "Unit Tests\Unit Tests.csproj", "{52474CEE-2AD8-4286-96C9-4D874C2277F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobertHeinDesktop", "RobertHeinDesktop\RobertHeinDesktop.csproj", "{CC2E830D-0DA3-4B81-B61D-B5E8701B52A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RobertHeinDesktop", "RobertHeinDesktop\RobertHeinDesktop.csproj", "{5440E78C-35D5-4671-B8AB-18067A7D6FB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{52474CEE-2AD8-4286-96C9-4D874C2277F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52474CEE-2AD8-4286-96C9-4D874C2277F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52474CEE-2AD8-4286-96C9-4D874C2277F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CC2E830D-0DA3-4B81-B61D-B5E8701B52A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC2E830D-0DA3-4B81-B61D-B5E8701B52A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC2E830D-0DA3-4B81-B61D-B5E8701B52A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CC2E830D-0DA3-4B81-B61D-B5E8701B52A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5440E78C-35D5-4671-B8AB-18067A7D6FB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5440E78C-35D5-4671-B8AB-18067A7D6FB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5440E78C-35D5-4671-B8AB-18067A7D6FB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5440E78C-35D5-4671-B8AB-18067A7D6FB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

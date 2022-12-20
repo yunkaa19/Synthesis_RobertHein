@@ -1,51 +1,53 @@
-﻿using Models.Enums;
-
-namespace Models.Entities;
+﻿namespace Models.Entities.Bonus;
 
 public class Bonuses
 {
-    protected int _id;
-    protected Product _product;
-    protected DateOnly _startDate;
-    protected DateOnly _endDate;
-    protected float _price;
+    private Product _product;
 
-    public int Id
-    {
-        get => _id;
-        set => _id = value;
-    }
+    public int Id { get; private init; }
 
     public Product Product
     {
         get => _product;
-        set => _product = value ?? throw new ArgumentNullException(nameof(value));
+        private init => _product = value ?? throw new ArgumentNullException(nameof(value));
     }
 
-    public DateOnly StartDate
-    {
-        get => _startDate;
-        set => _startDate = value;
-    }
+    public DateOnly StartDate { get; set; }
 
-    public DateOnly EndDate
-    {
-        get => _endDate;
-        set => _endDate = value;
-    }
+    public DateOnly EndDate { get; set; }
 
-    public float Price
-    {
-        get => _price;
-        set => _price = value;
-    }
+    public float Price { get; set; }
 
-    public Bonuses(int id, Product product, DateOnly startDate, DateOnly endDate, float price)
+    protected Bonuses(int id, Product product, DateOnly startDate, DateOnly endDate, float price)
     {
         Id = id;
+        _product = product;
         Product = product;
         StartDate = startDate;
         EndDate = endDate;
         Price = price;
+    }
+    public Bonuses(Product product, DateOnly startDate, DateOnly endDate, float price)
+    {
+        Product = product;
+        _product = product;
+        StartDate = startDate;
+        EndDate = endDate;
+        Price = price;
+    }
+    public Bonuses(int id, Product product, DateOnly startDate, DateOnly endDate)
+    {
+        Id = id;
+        _product = product;
+        Product = product;
+        StartDate = startDate;
+        EndDate = endDate;
+    }
+    public Bonuses(Product product, DateOnly startDate, DateOnly endDate)
+    {
+        Product = product;
+        _product = product;
+        StartDate = startDate;
+        EndDate = endDate;
     }
 }

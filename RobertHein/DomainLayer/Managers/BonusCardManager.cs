@@ -18,6 +18,11 @@ public class BonusCardManager
     {
         _bonusCards = _bonusCardRepository.GetAllBonusCards();
     }
+    
+    public List<BonusCard> GetAllBonusCards()
+    {
+        return _bonusCards;
+    }
     public void AddBonusCard(BonusCard bonusCard)
     {
         _bonusCards.Add(bonusCard);

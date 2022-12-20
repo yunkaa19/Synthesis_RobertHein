@@ -20,16 +20,16 @@ public class CategoryRepository : Repository, ICategoryRepository
                 {
                     if (reader["ParentId"] == DBNull.Value)
                     {
-                        int Id = Convert.ToInt32(reader["Id"].ToString());
-                        string Name = reader["Name"].ToString();
+                        int Id = Convert.ToInt32(reader["CategoryID"].ToString());
+                        string Name = reader["CategoryName"].ToString();
                         Category category = new Category(Id, Name);
                         categories.Add(category);
                     }
                     else
                     {
-                        int Id = Convert.ToInt32(reader["Id"].ToString());
+                        int Id = Convert.ToInt32(reader["CategoryID"].ToString());
                         string Name = reader["Name"].ToString();
-                        int ParentId = Convert.ToInt32(reader["ParentId"].ToString());
+                        int ParentId = Convert.ToInt32(reader["ParentID"].ToString());
                         Category category = new Category(Id, Name, ParentId);
                         categories.Add(category);
                     }
@@ -40,7 +40,7 @@ public class CategoryRepository : Repository, ICategoryRepository
         }
         catch (Exception ex)
         {
-
+            
         } 
         return categories;
         
@@ -113,7 +113,7 @@ public class CategoryRepository : Repository, ICategoryRepository
         }
         catch (Exception ex)
         {
-
+            throw ex;
         }
     }
 
@@ -123,12 +123,29 @@ public class CategoryRepository : Repository, ICategoryRepository
         {
             using(SqlConnection connection = new SqlConnection(ConnectionString))
             {
-               connection.Open();
-                SqlCommand command = new SqlCommand("UPDATE Categories SET CategoryName = @Name, ParentId = @ParentID WHERE CategoryID = @Id", connection);
-                command.Parameters.AddWithValue("@Name", category.Name);
-                command.Parameters.AddWithValue("@ParentId", category.ParentId);
-                command.Parameters.AddWithValue("@Id", category.Id);
-                command.ExecuteNonQuery();
+                if (category.ParentId != null)
+                {
+                    connection.Open();
+                    SqlCommand command =
+                        new SqlCommand(
+                            "UPDATE Categories SET CategoryName = @Name, ParentId = @ParentID WHERE CategoryID = @Id",
+                            connection);
+                    command.Parameters.AddWithValue("@Name", category.Name);
+                    command.Parameters.AddWithValue("@ParentId", category.ParentId);
+                    command.Parameters.AddWithValue("@Id", category.Id);
+                    command.ExecuteNonQuery();
+                }
+                else
+                {
+                    connection.Open();
+                    SqlCommand command =
+                        new SqlCommand(
+                            "UPDATE Categories SET CategoryName = @Name WHERE CategoryID = @Id",
+                            connection);
+                    command.Parameters.AddWithValue("@Name", category.Name);
+                    command.Parameters.AddWithValue("@Id", category.Id);
+                    command.ExecuteNonQuery();
+                }
             }
         }
         catch (Exception ex)

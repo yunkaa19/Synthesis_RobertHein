@@ -14,6 +14,8 @@ public class Product
   private byte[] _image;
   private bool _isDiscontinued;
   
+ // private List<Bonuses> _bonuses;
+
 public int Id
   {
     get => _id;

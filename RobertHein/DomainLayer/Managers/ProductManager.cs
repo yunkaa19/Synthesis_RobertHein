@@ -16,16 +16,28 @@ public class ProductManager
         _products = _productRepository.GetAllProducts();
         
     }
-    
-    public List<Product> Refresh()
+
+    public void Refresh()
     {
-        return _products.FindAll(p => p.IsDiscontinued == false);
+        _products = _productRepository.GetAllProducts();
+    }
+    
+    public List<Product> GetAll(bool getOnlyActive = true)
+    {
+        if (getOnlyActive)
+        {
+            return _products.FindAll(p => p.IsDiscontinued == false);
+        }
+        else
+        {
+            return _products;
+        }
     }
     public Product GetProductById(int id)
     {
         return _products.Find(p => p.Id == id);
     }
-    private void DiscontinueProduct(Product product)
+    public void DiscontinueProduct(Product product)
     {
         Product productToDiscontinue = _products.Find(p => p.Id == product.Id);
         if (productToDiscontinue is not null)
@@ -34,7 +46,8 @@ public class ProductManager
             _productRepository.DeleteProduct(product.Id);
         }
     }
-    private void ReenableProduct(Product product)
+    
+    public void ReenableProduct(Product product)
     {
         Product productToReenable = _products.Find(p => p.Id == product.Id);
         if (productToReenable is not null)
@@ -43,4 +56,31 @@ public class ProductManager
             _productRepository.UpdateProduct(product);
         }
     }
+    public void AddProduct(Product product)
+    {
+        _products.Add(product);
+        _productRepository.AddProduct(product);
+    }
+    public void UpdateProduct(Product product)
+    {
+        Product productToUpdate = _products.Find(p => p.Id == product.Id);
+        if (productToUpdate is not null)
+        {
+            productToUpdate.Name = product.Name;
+            productToUpdate.Price = product.Price;
+            productToUpdate.IsDiscontinued = product.IsDiscontinued;
+            _productRepository.UpdateProduct(product);
+        }
+    }
+    
+    public List<Product> GetProductsByCategory(int id)
+    {
+        return _products.FindAll(p => p.Category.Id == id);
+    }
+    
+    public List<Product> GetCustomerFavorites(int id)
+    {
+        return _productRepository.GetCustomerFavoriteProducts(id);
+    }
+    
 }
