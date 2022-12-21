@@ -1,10 +1,53 @@
 ﻿@page
+@using Models.Entities
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-7">Active Bonuses</h1>
+    <table class="table table-dark">
+        <thead>
+        <th scope="col">Product</th>
+        <th scope="col">End date</th>
+        <th scope="col">Discount</th>
+        </thead>
+        <tbody>
+        @foreach (var bonus in Model._bonusManager.GetBonuses())
+        {
+            //if (bonus.EndDate > DateOnly.Parse(DateTime.Now.ToShortDateString()))
+            {
+                <tr>
+                    <td>@bonus.Product.Name</td>
+                    <td>@bonus.EndDate</td>
+                    @switch(bonus.GetType()){
+                    case var _ when bonus.GetType() == typeof(PercentageDiscount):
+                        <td>Percentage</td>
+                        break;
+                    case var _ when bonus.GetType() == typeof(QuantityDiscount):
+                        <td>Amount</td>
+                        break;
+                    case var _ when bonus.GetType() == typeof(SecondHalfPrice):
+                        <td>Second Half price</td>
+                        break;
+                    case var _ when bonus.GetType() == typeof(XForThePriceOfY):
+                        <td>Second Half price</td>
+                        break;
+                    }
+                    
+                    
+                    
+                </tr>
+            }
+        }
+        </tbody>
+        
+        
+        
+        
+    </table>
+    
+    
+    
 </div>

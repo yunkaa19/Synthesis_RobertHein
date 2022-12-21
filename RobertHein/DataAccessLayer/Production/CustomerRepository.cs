@@ -30,7 +30,7 @@ public class CustomerRepository : Repository, ICustomerRepository
                     string address = reader["Address"].ToString().Trim();
                     string city = reader["City"].ToString().Trim();
                     string zipCode = reader["ZipCode"].ToString().Trim();
-                    DateOnly birthday = DateOnly.FromDateTime(Convert.ToDateTime(reader["Birthday"].ToString().Trim()));
+                    DateOnly birthday = DateOnly.FromDateTime(Convert.ToDateTime(reader["DateOfBirth"].ToString().Trim()));
                     string password = reader["Password"].ToString().Trim();
                     Customer customer =
                         new Customer(id, name, address, city, zipCode, phone, birthday, email, password);
@@ -112,14 +112,14 @@ public class CustomerRepository : Repository, ICustomerRepository
         return customer;
     }
 
-    public void AddCustomer(Customer customer)
+    public bool AddCustomer(Customer customer)
     {
         try
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                SqlCommand command = new SqlCommand("INSERT INTO Customer (FirstName, LastName, Email, Phone, Address, City, ZipCode, Birthday, Password) VALUES (@firstName, @lastName, @email, @phone, @address, @city, @zipCode, @birthday, @password)", connection);
+                SqlCommand command = new SqlCommand("INSERT INTO Customer (FirstName, LastName, Email, Phone, Address, City, ZipCode, DateOfBirth, Password) VALUES (@firstName, @lastName, @email, @phone, @address, @city, @zipCode, @birthday, @password)", connection);
                 string firstName = customer.Name.Split(" ")[0];
                 string lastName = customer.Name.Split(" ")[1];
                 command.Parameters.AddWithValue("@firstName",firstName);
@@ -129,15 +129,17 @@ public class CustomerRepository : Repository, ICustomerRepository
                 command.Parameters.AddWithValue("@address", customer.Address);
                 command.Parameters.AddWithValue("@city", customer.City);
                 command.Parameters.AddWithValue("@zipCode", customer.ZipCode);
-                command.Parameters.AddWithValue("@birthday", customer.DateOfBirth);
+                command.Parameters.AddWithValue("@birthday", customer.DateOfBirth.ToString("yyyy-MM-dd"));
                 command.Parameters.AddWithValue("@password", customer.Password);
                 command.ExecuteNonQuery();
+                return true;
             }
         }
         catch (Exception ex)
         {
             
         }
+        return false;
     }
 
     public void UpdateCustomer(Customer customer)

@@ -30,10 +30,13 @@ public class CustomerManager
         {
             return false;
         }
-        
-        _customerRepository.AddCustomer(new Customer(r));
-        _customers.Add(_customerRepository.GetCustomerByEmail(r.email));
-        return true;
+
+        if (_customerRepository.AddCustomer(new Customer(r)))
+        {
+            _customers.Add(_customerRepository.GetCustomerByEmail(r.email));
+            return true;
+        }
+        return false;
     }
     public void UpdateCustomer(Customer customer)
     {
@@ -81,6 +84,28 @@ public class CustomerManager
     {
         IProductRepository productRepository = productRepositoryA;
         customer.Favorites = productRepository.GetCustomerFavoriteProducts(customer.Id);
+    }
+
+    public bool Login(string email, string password)
+    {
+        string hashedPassword = "";
+        foreach (var customer in _customers)
+        {
+            if (customer.Email == email)
+            {
+                hashedPassword = customer.Password;
+            }
+        }
+        if (hashedPassword == "")
+        {
+            Customer customer = _customerRepository.GetCustomerByEmail(email);
+            if(customer is null)
+            {
+                return false;
+            }
+            hashedPassword = customer.Password;
+        }
+        return PasswordHasher.ValidatePassword(password, hashedPassword);
     }
     
 }

@@ -23,24 +23,32 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-page="/Products">Products</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-light" id="navbarDrop" role="button" data-bs-toggle="dropdown" aria-expanded="false" asp-area="" asp-page="">Categories</a>
-                            <ul class="dropdown-menu-dark" aria-labaledby="navbarDrop">
-                                @* @foreach(var category in Model.Categories) *@
-                                @* { *@
-                                @*     if (!category.parentID == null) *@
-                                @*     { *@
-                                @*         //<li><a class="dropdown-item text-light" asp-area="" asp-page="/Products" asp-route-category=category>category.Name</a></li> *@
-                                @*     } *@
-                                @* } *@
-                            </ul>
-                        </li>
+                        @* <li class="nav-item dropdown"> *@
+                        @*     <a class="nav-link dropdown-toggle text-light" id="navbarDrop" role="button" data-bs-toggle="dropdown" aria-expanded="false" asp-area="" asp-page="">Categories</a> *@
+                        @*     <ul class="dropdown-menu-dark" aria-labaledby="navbarDrop"> *@
+                        @*         @foreach(var category in Model._categoryManager.GetAllCategories()) *@
+                        @*         { *@
+                        @*             if (!(category.ParentId == null)) *@
+                        @*             { *@
+                        @*                 <li><a class="dropdown-item text-light" asp-area="" asp-page="/Products" asp-route-category=category>category.Name</a></li> *@
+                        @*             } *@
+                        @*         } *@
+                        @*     </ul> *@
+                        @* </li> *@
                     </ul>
                 </div>
             </div>
             <div style="display:flex;">
-                <img class="d-flex align-self-center mh-100" style="width: 80px;" src="Images/Robert Hein Basket .png"/>
-                <img class="d-flex align-self-center mh-100" style="width: 80px;" src="Images/Profile.png"/>
+                <a asp-area="" asp-page="/ShoppingCart"> <img class="d-flex align-self-center mh-100" style="width: 80px;" src="Images/Robert Hein Basket .png"/></a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-area="" asp-page="/Profile"><img class="d-flex align-self-center mh-100" style="width: 80px;" src="Images/Profile.png"/></a>
+                }
+                else
+                {
+                    <a asp-area="" asp-page="/LogIn"><img class="d-flex align-self-center mh-100" style="width: 80px;" src="Images/Profile.png"/></a>    
+                }
+                
             </div>
         </nav>
         
